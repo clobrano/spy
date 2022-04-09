@@ -10,6 +10,13 @@ from watchdog.events import FileSystemEventHandler
 import subprocess
 import argparse
 
+DEBUG = False
+
+
+def dbg(msg: str) -> None:
+    if DEBUG:
+        print(msg)
+
 
 class Runner:
     map: Dict[str, str] = {}
@@ -39,16 +46,16 @@ class FileSystemHandler(FileSystemEventHandler):
     def on_any_event(self, event):
         if event.is_directory:
             return
-        print(f"{event.src_path}")
-        print(f"{event.event_type}")
+        dbg(f"{event.src_path}")
+        dbg(f"{event.event_type}")
 
         self.runner.run(event.event_type)
         if event.event_type == "created":
-            print(f"{event.src_path} created")
+            dbg(f"{event.src_path} created")
         if event.event_type == "modified":
-            print(f"{event.src_path} changed")
+            dbg(f"{event.src_path} changed")
         if event.event_type == "deleted":
-            print(f"{event.src_path} deleted")
+            dbg(f"{event.src_path} deleted")
 
 
 def run(

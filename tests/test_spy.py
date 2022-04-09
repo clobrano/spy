@@ -4,7 +4,7 @@ import pytest
 import os
 import time
 import threading
-from s import run
+from s import run, DEBUG
 
 
 @pytest.fixture
@@ -27,6 +27,7 @@ def setupCreateNewfile():
     os.remove("newfile")
 
 
+@pytest.mark.skipif(not DEBUG, reason="This needs debug logs to pass")
 def test_spy_catch_events_from_the_directory(setupFilesystemWatcher, capfd):
     with open("newfile", "w"):
         pass
@@ -36,6 +37,7 @@ def test_spy_catch_events_from_the_directory(setupFilesystemWatcher, capfd):
     os.remove("newfile")
 
 
+@pytest.mark.skipif(not DEBUG, reason="This needs debug logs to pass")
 def test_spy_catch_change_event_from_directory(
         setupFilesystemWatcher, setupCreateNewfile, capfd):
     with open("newfile", "w") as f:
