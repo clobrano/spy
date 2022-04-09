@@ -4,7 +4,7 @@ import pytest
 import os
 import time
 import threading
-from s import run, DEBUG
+from spy.s import run, DEBUG
 
 
 @pytest.fixture
