@@ -10,7 +10,9 @@ from s import run
 @pytest.fixture
 def setupFilesystemWatcher():
     thread = threading.Thread(
-        target=run, name="spy/run", kwargs={"watch_dir": os.getcwd()}
+        target=run,
+        name="spy/run",
+        kwargs={"watch_dir": os.getcwd(), "timeout": 3}
     )
     thread.start()
     # give it a second to be ready to listen
@@ -50,7 +52,8 @@ def test_spy_run_command_on_create_event(capfd):
         name="spy/run",
         kwargs={
             "watch_dir": os.getcwd(),
-            "on_create": "echo user command output"}
+            "on_create": "echo user command output",
+            "timeout": 3}
     )
     thread.start()
     # give it a second to be ready to listen
@@ -71,7 +74,8 @@ def test_spy_run_command_on_change_event_from_directory(setupCreateNewfile,
         name="spy/run",
         kwargs={
             "watch_dir": os.getcwd(),
-            "on_change": "echo user command output on change"}
+            "on_change": "echo user command output on change",
+            "timeout": 3}
     )
     thread.start()
     # give it a second to be ready to listen
@@ -82,4 +86,3 @@ def test_spy_run_command_on_change_event_from_directory(setupCreateNewfile,
     time.sleep(1)
     out, err = capfd.readouterr()
     assert "user command output on change" in out
-    os.remove("newfile")
