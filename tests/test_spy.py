@@ -88,3 +88,24 @@ def test_spy_run_command_on_change_event_from_directory(setupCreateNewfile,
     time.sleep(1)
     out, err = capfd.readouterr()
     assert "user command output on change" in out
+
+
+def test_spy_can_use_event_path_on_event(capfd):
+    thread = threading.Thread(
+        target=run,
+        name="spy/run",
+        kwargs={
+            "watch_dir": os.getcwd(),
+            "on_create": "echo event path is {path}",
+            "timeout": 3}
+    )
+    thread.start()
+    # give it a second to be ready to listen
+    time.sleep(1)
+    with open("newfile", "w"):
+        pass
+    time.sleep(.5)
+    out, err = capfd.readouterr()
+    assert f"event path is {os.getcwd()}/newfile" in out
+    time.sleep(.5)
+    os.remove("newfile")
