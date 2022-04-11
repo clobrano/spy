@@ -22,16 +22,18 @@ class Runner:
     map: Dict[str, str] = {}
 
     def __init__(
-        self, on_create: str = None, on_change: str = None, on_remove: str = None
+        self,
+        on_create: str = None, on_change: str = None, on_remove: str = None
     ):
         self.map["created"] = on_create
         self.map["modified"] = on_change
         self.map["deleted"] = on_remove
 
-    def run(self, event_type: str) -> int:
+    def run(self, event_type: str, event_src_path: str) -> int:
         cmd = self.map.get(event_type, None)
         if not cmd:
             return 0
+        cmd = cmd.replace("{path}", event_src_path)
         cp = subprocess.run(cmd, shell=True)
         return cp.returncode
 
@@ -49,7 +51,7 @@ class FileSystemHandler(FileSystemEventHandler):
         dbg(f"{event.src_path}")
         dbg(f"{event.event_type}")
 
-        self.runner.run(event.event_type)
+        self.runner.run(event.event_type, event.src_path)
         if event.event_type == "created":
             dbg(f"{event.src_path} created")
         if event.event_type == "modified":
