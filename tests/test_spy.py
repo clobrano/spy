@@ -152,4 +152,3 @@ def test_spy_ignores_events_if_file_does_not_have_listen_extension(capfd):
     assert "" in out
     time.sleep(.5)
     os.remove("newfile.txt")
-

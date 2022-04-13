@@ -135,5 +135,5 @@ if __name__ == "__main__":
          args.on_change,
          args.on_remove,
          args.recursive,
-         args.extensions,
-         args.timeout)
+         args.extensions.split(","),
+         int(args.timeout))
