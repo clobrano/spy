@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 # vi: set ft=python :
 """Spy catches files changes and react with custom commands"""
-from typing import Dict
+from typing import Dict, List
 import os
 import time
+import pathlib
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import subprocess
@@ -42,14 +43,19 @@ class FileSystemHandler(FileSystemEventHandler):
     """Listen to filesystem changes and react with
     user provided commands"""
 
-    def __init__(self, runner: Runner):
+    def __init__(self, runner: Runner, extensions: List[str] = []):
         self.runner = runner
+        self.extensions = extensions
 
     def on_any_event(self, event):
         if event.is_directory:
             return
         dbg(f"{event.src_path}")
         dbg(f"{event.event_type}")
+
+        extension = pathlib.Path(event.src_path).suffix
+        if self.extensions and extension and extension not in self.extensions:
+            return
 
         self.runner.run(event.event_type, event.src_path)
         if event.event_type == "created":
@@ -60,12 +66,13 @@ class FileSystemHandler(FileSystemEventHandler):
             dbg(f"{event.src_path} deleted")
 
 
-def run(
+def main(
     watch_dir: str = os.getcwd(),
     on_create: str = None,
     on_change: str = None,
     on_remove: str = None,
     recursive: bool = True,
+    extensions: List[str] = [],
     timeout: int = -1,
 ) -> None:
     runner = Runner(
@@ -73,7 +80,7 @@ def run(
         on_change=on_change,
         on_remove=on_remove
     )
-    handler = FileSystemHandler(runner)
+    handler = FileSystemHandler(runner, extensions)
     observer = Observer()
     observer.schedule(handler, watch_dir, recursive)
     observer.start()
@@ -112,15 +119,21 @@ if __name__ == "__main__":
         help="command to execute when a file is deleted from the directory",
     )
     parser.add_argument(
+        "--extensions",
+        default=[],
+        help="comma separated list of extension file to track",
+    )
+    parser.add_argument(
         "--timeout",
         default=-1,
         help="timeout in seconds for Spy to watch the directory (-1 is infinite)",
     )
     args = parser.parse_args()
 
-    run(args.watch_dir,
-        args.on_create,
-        args.on_change,
-        args.on_remove,
-        args.recursive,
-        args.timeout)
+    main(args.watch_dir,
+         args.on_create,
+         args.on_change,
+         args.on_remove,
+         args.recursive,
+         args.extensions,
+         args.timeout)
