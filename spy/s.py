@@ -24,7 +24,9 @@ class Runner:
 
     def __init__(
         self,
-        on_create: str = None, on_change: str = None, on_remove: str = None
+        on_create: str = None,
+        on_change: str = None,
+        on_remove: str = None,
     ):
         self.map["created"] = on_create
         self.map["modified"] = on_change
@@ -75,11 +77,7 @@ def main(
     extensions: List[str] = [],
     timeout: int = -1,
 ) -> None:
-    runner = Runner(
-        on_create=on_create,
-        on_change=on_change,
-        on_remove=on_remove
-    )
+    runner = Runner(on_create=on_create, on_change=on_change, on_remove=on_remove)
     handler = FileSystemHandler(runner, extensions)
     observer = Observer()
     observer.schedule(handler, watch_dir, recursive)
@@ -103,17 +101,16 @@ if __name__ == "__main__":
         "--watch-dir", "-w", default=os.getcwd(), help="The directory to watch"
     )
     parser.add_argument(
-        "--recursive", "-r", default=True,
-        help="whether to watch the subdirectories"
+        "--recursive",
+        "-r",
+        default=True,
+        help="whether to watch the subdirectories",
     )
     parser.add_argument(
         "--on-create",
         help="command to execute when a file is created inside the directory",
     )
-    parser.add_argument(
-        "--on-change",
-        help="command to execute on directory changes"
-    )
+    parser.add_argument("--on-change", help="command to execute on directory changes")
     parser.add_argument(
         "--on-remove",
         help="command to execute when a file is deleted from the directory",
@@ -126,14 +123,16 @@ if __name__ == "__main__":
     parser.add_argument(
         "--timeout",
         default=-1,
-        help="timeout in seconds for Spy to watch the directory (-1 is infinite)",
+        help=("timeout in seconds for Spy to watch the directory (-1 is infinite)"),
     )
     args = parser.parse_args()
 
-    main(args.watch_dir,
-         args.on_create,
-         args.on_change,
-         args.on_remove,
-         args.recursive,
-         args.extensions.split(","),
-         int(args.timeout))
+    main(
+        args.watch_dir,
+        args.on_create,
+        args.on_change,
+        args.on_remove,
+        args.recursive,
+        args.extensions.split(","),
+        int(args.timeout),
+    )
