@@ -123,7 +123,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--timeout",
         default=-1,
-        help=("timeout in seconds for Spy to watch the directory (-1 is infinite)"),
+        help="timeout in seconds for Spy to watch the directory (-1 is infinite)",
     )
     args = parser.parse_args()
 
