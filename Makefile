@@ -9,4 +9,5 @@ install:
 	python3 -m pip install black
 
 tests:
-	python3 -m pytest
+	echo "TDD Running [`date +%H:%M:%S`]" > ~/.tdd-result
+	python3 -m pytest && echo "TDD OK [`date +%H:%M:%S`]" > ~/.tdd-result || echo "TDD FAIL [`date +%H:%M:%S`]" > ~/.tdd-result 
