@@ -18,7 +18,7 @@ jobs:
         # This might be better replaced by Pipenv
         - name: install dependencies
           run: |
-            apt-get install -y make
+            sudo apt-get install -y make
             make install
 
         - name: run test suite
