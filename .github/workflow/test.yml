@@ -1,0 +1,27 @@
+name: PyTest
+on: push
+
+jobs:
+    test:
+      runs-on: ubuntu-latest
+      timeout-minutes: 5
+
+      steps:
+        - name: clone repository
+          uses: actions/checkout@v2
+
+        - name: setup python
+          uses: actions/setup-python@v2
+          with:
+            python-version: "3.x"
+
+        # This might be better replaced by Pipenv
+        - name: install dependencies
+          run: |
+            apt-get install -y make
+            make install
+
+        - name: run test suite
+          run: |
+            python3 -m pytest -v
+
