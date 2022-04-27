@@ -1,3 +1,5 @@
+![pytest](https://github.com/clobrano/spy/actions/workflows/test.yml/badge.svg)
+
 # spy
 File watcher in Python based on [Watchdog](https://duckduckgo.com/l/?uddg=https://pypi.org/project/watchdog/&notrut=duckduck_in)
 
