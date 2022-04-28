@@ -68,7 +68,7 @@ class FileSystemHandler(FileSystemEventHandler):
             dbg(f"{event.src_path} deleted")
 
 
-def main(
+def run(
     watch_dir: str = os.getcwd(),
     on_create: str = None,
     on_change: str = None,
@@ -77,9 +77,12 @@ def main(
     extensions: List[str] = [],
     timeout: int = -1,
 ) -> None:
-    runner = Runner(on_create=on_create, on_change=on_change, on_remove=on_remove)
+    runner = Runner(on_create, on_change, on_remove)
     handler = FileSystemHandler(runner, extensions)
     observer = Observer()
+
+    print(f"watching directory {watch_dir}")
+
     observer.schedule(handler, watch_dir, recursive)
     observer.start()
     if timeout == -1:
@@ -95,7 +98,7 @@ def main(
     observer.join()
 
 
-if __name__ == "__main__":
+def main() -> None:
     parser = argparse.ArgumentParser(__doc__)
     parser.add_argument(
         "--watch-dir", "-w", default=os.getcwd(), help="The directory to watch"
@@ -110,24 +113,24 @@ if __name__ == "__main__":
         "--on-create",
         help="command to execute when a file is created inside the directory",
     )
-    parser.add_argument("--on-change", help="command to execute on directory changes")
+    parser.add_argument("--on-change", help="command to execute on events")
     parser.add_argument(
         "--on-remove",
         help="command to execute when a file is deleted from the directory",
     )
     parser.add_argument(
         "--extensions",
-        default=[],
+        default="",
         help="comma separated list of extension file to track",
     )
     parser.add_argument(
         "--timeout",
         default=-1,
-        help="timeout in seconds for Spy to watch the directory (-1 is infinite)",
+        help="timeout in seconds (-1 is infinite)",
     )
     args = parser.parse_args()
 
-    main(
+    run(
         args.watch_dir,
         args.on_create,
         args.on_change,
@@ -136,3 +139,7 @@ if __name__ == "__main__":
         args.extensions.split(","),
         int(args.timeout),
     )
+
+
+if __name__ == "__main__":
+    main()

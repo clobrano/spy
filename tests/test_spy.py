@@ -4,7 +4,7 @@ import pytest
 import os
 import time
 import threading
-from spy.s import main, DEBUG
+from spy.spy import run, DEBUG
 
 SLEEP = 0.01
 
@@ -12,7 +12,7 @@ SLEEP = 0.01
 @pytest.fixture
 def setupFilesystemWatcher():
     thread = threading.Thread(
-        target=main, name="spy/run", kwargs={"watch_dir": os.getcwd(), "timeout": 3}
+        target=run, name="spy/run", kwargs={"watch_dir": os.getcwd(), "timeout": 3}
     )
     thread.start()
     # give it a second to be ready to listen
@@ -51,7 +51,7 @@ def test_spy_catch_change_event_from_directory(
 
 def test_spy_run_command_on_create_event(capfd):
     thread = threading.Thread(
-        target=main,
+        target=run,
         name="spy/run",
         kwargs={
             "watch_dir": os.getcwd(),
@@ -73,7 +73,7 @@ def test_spy_run_command_on_create_event(capfd):
 
 def test_spy_run_command_on_change_event_from_directory(setupCreateNewfile, capfd):
     thread = threading.Thread(
-        target=main,
+        target=run,
         name="spy/run",
         kwargs={
             "watch_dir": os.getcwd(),
@@ -94,7 +94,7 @@ def test_spy_run_command_on_change_event_from_directory(setupCreateNewfile, capf
 
 def test_spy_can_use_event_path_on_event(capfd):
     thread = threading.Thread(
-        target=main,
+        target=run,
         name="spy/run",
         kwargs={
             "watch_dir": os.getcwd(),
@@ -116,7 +116,7 @@ def test_spy_can_use_event_path_on_event(capfd):
 
 def test_spy_can_listen_events_on_some_extensions_only(capfd):
     thread = threading.Thread(
-        target=main,
+        target=run,
         name="spy/run",
         kwargs={
             "watch_dir": os.getcwd(),
@@ -139,7 +139,7 @@ def test_spy_can_listen_events_on_some_extensions_only(capfd):
 
 def test_spy_ignores_events_if_file_does_not_have_listen_extension(capfd):
     thread = threading.Thread(
-        target=main,
+        target=run,
         name="spy/run",
         kwargs={
             "watch_dir": os.getcwd(),
