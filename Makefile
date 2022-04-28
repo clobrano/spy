@@ -1,4 +1,4 @@
-.PHONY: tests
+.PHONY: tests build upload
 
 tests:
 	echo "TDD Running [`date +%H:%M:%S`]" > ~/.tdd-result
@@ -11,3 +11,15 @@ install:
 	python3 -m pip install -r requirements.txt
 	python3 -m pip install pytest
 	python3 -m pip install black
+
+build:
+	python3 -m pip install --upgrade build; \
+	python3 -m build
+
+upload-test: build
+	python3 -m pip install --upgrade twine; \
+	python3 -m twine upload --repository testpypi dist/* --verbose;
+
+upload: build
+	python3 -m pip install --upgrade twine; \
+	python3 -m twine upload dist/* --verbose;
