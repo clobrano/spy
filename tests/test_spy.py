@@ -6,7 +6,7 @@ import time
 import threading
 from spy.spy import run, DEBUG
 
-SLEEP = 0.01
+SLEEP = 0.05
 
 
 @pytest.fixture
